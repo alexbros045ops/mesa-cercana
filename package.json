@@ -1,0 +1,20 @@
+{
+  "name": "restaurantesweb",
+  "version": "1.0.0",
+  "description": "Prototipo estático para explorar restaurantes por categoría y buscar por nombre, comida o zona.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test app.test.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  }
+}

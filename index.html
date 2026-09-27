@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <meta name="description" content="Explora restaurantes por categoría, revisa menús y comparte tus lugares favoritos.">
+  <title>Mesa Cercana — encuentra tu próximo lugar</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Mesa Cercana, inicio">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>Mesa<span class="brand-light">Cercana</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a class="nav-link is-current" href="#explorar">Explorar</a>
+      <button class="nav-link" type="button" data-open-add>Agregar lugar</button>
+      <button class="nav-link" type="button" data-open-osm style="color:var(--green-dark);font-weight:700;">🗺️ Importar de Mapa (Gratis)</button>
+    </nav>
+    <div class="header-place">
+      <span class="db-badge" id="db-status-indicator" title="Base de datos SQLite local"><span class="db-badge-dot"></span> SQLite Activo</span>
+      <span class="place-pin" aria-hidden="true">⌖</span><span>San Salvador</span><span class="place-chevron" aria-hidden="true">⌄</span>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="discover-section" id="explorar" aria-labelledby="page-title">
+      <div class="section-kicker"><span class="kicker-line"></span> UNA GUÍA HECHA ENTRE TODOS</div>
+      <div class="intro-row">
+        <div>
+          <h1 id="page-title">Hay una mesa<br><span>esperándote.</span></h1>
+          <p class="intro-copy">Encuentra ese lugar nuevo, o vuelve al que ya te gusta. Explora por antojo, no por algoritmo.</p>
+        </div>
+        <div class="intro-side-note"><span class="note-mark">01</span><p>Lugares locales.<br>Recomendaciones reales.</p></div>
+      </div>
+
+      <form class="search-bar" role="search" onsubmit="return false">
+        <span class="search-icon" aria-hidden="true"></span>
+        <label class="sr-only" for="search-input">Busca por restaurante, comida o zona</label>
+        <input id="search-input" type="search" placeholder="Restaurante, comida o zona…" autocomplete="off">
+        <button id="clear-search" class="search-clear" type="button" aria-label="Limpiar búsqueda">Limpiar</button>
+        <span class="search-divider" aria-hidden="true"></span>
+        <span class="search-region"><span aria-hidden="true">⌖</span> El Salvador</span>
+      </form>
+
+      <div class="category-wrap">
+        <span class="filter-label">Explorar por</span>
+        <div class="category-list" id="category-list" aria-label="Filtrar por categoría"></div>
+      </div>
+
+      <div class="results-heading">
+        <div><p class="eyebrow">SELECCIÓN DE LA COMUNIDAD</p><h2>Lugares para descubrir <span class="results-count" id="result-count"></span></h2></div>
+        <button class="text-action" type="button" data-open-add>+ Comparte un lugar</button>
+      </div>
+
+      <div class="restaurant-grid" id="restaurant-grid" aria-live="polite"></div>
+      <div class="empty-state" id="empty-state" hidden>
+        <div class="empty-mark" aria-hidden="true">⌕</div>
+        <h3>No encontramos ese lugar</h3>
+        <p>Prueba con otra palabra o cambia la categoría.</p>
+        <button class="button button-secondary" type="button" data-open-add>¿Conoces uno? Agrégalo</button>
+      </div>
+
+      <aside class="community-strip">
+        <div class="community-symbol" aria-hidden="true">+</div>
+        <div><strong>¿Tienes un lugar que merece más mesas?</strong><p>Ayuda a que más personas lo encuentren. Tu restaurante se guardará en la base de datos.</p></div>
+        <button class="button button-dark" type="button" data-open-add>Agregar restaurante <span aria-hidden="true">↗</span></button>
+      </aside>
+      <p class="prototype-disclaimer">Mesa Cercana · Base de datos SQLite integrada con restaurantes, menús y reseñas.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand brand-small" href="#inicio"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Mesa<span class="brand-light">Cercana</span></span></a><p>Una guía local que crece con cada aporte.</p><span>SQLITE + EXPRESS</span></footer>
+
+  <dialog class="modal detail-modal" id="restaurant-dialog" aria-labelledby="detail-title">
+    <button class="modal-close" type="button" data-close-dialog aria-label="Cerrar detalles">×</button>
+    <div id="detail-content"></div>
+  </dialog>
+
+  <dialog class="modal add-modal" id="add-dialog" aria-labelledby="add-title">
+    <button class="modal-close" type="button" data-close-dialog aria-label="Cerrar formulario">×</button>
+    <p class="eyebrow">SUMA UN BUEN LUGAR</p>
+    <h2 id="add-title">Comparte tu hallazgo.</h2>
+    <p class="form-intro">Completa los datos para registrar el restaurante en la base de datos.</p>
+    <form id="contribution-form" class="contribution-form">
+      <label>Nombre del restaurante<input name="name" required maxlength="80" placeholder="Ej. Café del Barrio"></label>
+      <div class="form-grid">
+        <label>Categoría<select name="category" required><option value="" disabled selected>Elige una</option><option>Carnes</option><option>Pizza</option><option>Cafetería</option><option>Mexicana</option><option>Sushi</option><option>Otra</option></select></label>
+        <label>Ciudad<input name="city" required maxlength="60" value="San Salvador" placeholder="Ej. San Salvador"></label>
+      </div>
+      <div class="form-grid">
+        <label>Rango de precio<select name="price"><option value="$">$ (Económico)</option><option value="$$" selected>$$ (Medio)</option><option value="$$$">$$$ (Alto)</option></select></label>
+        <label>Horario<input name="hours" placeholder="Ej. Hoy: 11:00 a. m. – 9:00 p. m."></label>
+      </div>
+      <label>Dirección o zona<input name="address" required maxlength="120" placeholder="Calle, avenida o referencia"></label>
+      <label>¿Qué lo hace especial?<textarea name="description" rows="3" maxlength="240" placeholder="Un platillo, el ambiente, un buen dato…"></textarea></label>
+      <p class="local-storage-note"><span aria-hidden="true">✓</span> El restaurante se guardará directamente en tu base de datos SQLite.</p>
+      <button class="button button-dark submit-button" type="submit">Guardar restaurante <span aria-hidden="true">↗</span></button>
+    </form>
+  </dialog>
+
+  <dialog class="modal add-modal" id="osm-dialog" aria-labelledby="osm-title">
+    <button class="modal-close" type="button" data-close-dialog aria-label="Cerrar ventana">×</button>
+    <p class="eyebrow">OPENSTREETMAP · 100% LIBRE Y GRATIS</p>
+    <h2 id="osm-title">Buscar e importar restaurantes</h2>
+    <p class="form-intro">Sin tarjetas de crédito ni claves API. Escribe una ciudad, colonia o tipo de comida para importar lugares reales a tu base de datos SQLite.</p>
+
+    <form id="osm-search-form" class="subitem-form">
+      <div style="display:flex;gap:8px;">
+        <input name="query" placeholder="Ej. Restaurantes en Santa Tecla, Cafés en San Salvador, Pizza..." required style="flex:1;">
+        <button class="button button-dark" type="submit" id="btn-search-osm">Buscar en Mapa</button>
+      </div>
+    </form>
+
+    <div id="osm-results-status" style="margin-top:12px;font-size:11px;color:#77796e;"></div>
+    <div id="osm-results" style="margin-top:10px;display:grid;gap:10px;max-height:340px;overflow-y:auto;padding-right:4px;"></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
